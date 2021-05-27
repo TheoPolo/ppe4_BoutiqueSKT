@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produit{% endblock %}
+
+{% block body %}
+    <h1>{{ produit.libelle }}</h1>
+
+    <table class="table">
+            <tbody>
+                <tr>
+                    <td style=" border: 2px solid; width: 20rem"><img src="{{ asset(produit.image) }}" class="img-fluid h1-p shadow"></td>
+                    <td>
+                        <h3>Description</h3>
+                        <p>{{ produit.description }}</p>
+                        <p>{{ produit.tarif }} €</p>
+                        <a class="btn" style="background: #22454c; color:white;" href="{{ path('accueil_add', {'id': produit.id}) }}">Ajouter au panier</a>
+                    </td>
+                </tr>
+            </tbody>
+    </table>
+
+
+    <button type="button" class="btn" style="background: #22454c; margin-left: 1rem"><a href="{{ path('accueil') }}" style="color:white;">Retour à la boutique</a></button>
+
+{% endblock %}

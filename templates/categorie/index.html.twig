@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categorie index{% endblock %}
+
+{% block body %}
+    <h1>Gestion des catégories</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Taille de board</th>
+            </tr>
+        </thead>
+    </table>
+            <form action="{{ path('filter') }}" method="POST">
+                {% for categorie in categories %}
+                    <label><input type="checkbox" name="taille[]" value="{{ categorie.id }}">{{ categorie.libelle }}</label>
+                {% endfor %}
+                <input type="submit" value="Rechercher" name="submit">
+                {% if app.request.request.all is not empty %}
+                    <a href="{{ path('produit_index') }}" class="btn btn-dark">Annuler</a>
+                {% endif %}
+            </form>
+{% endblock %}

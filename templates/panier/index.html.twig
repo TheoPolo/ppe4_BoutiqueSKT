@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier{% endblock %}
+
+{% block body %}
+
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 1000px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>
+
+    <div class="example-wrapper">
+
+        <h1>Panier</h1>
+
+        <table class="table">
+            <thead class="bg-dark text-light">
+            <tr class="text-center">
+                <th>Produit</th>
+                <th>Appercue</th>
+                <th>Quantite</th>
+                <th>Prix</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for contenir in contenirs %}
+                <tr class="text-center " style="border: 1px solid">
+                    <td class="align-self-end align-middle"
+                        style="border: 1px solid">{{ contenir.idProduit.libelle }}</td>
+                    <td class="align-middle" style="border: 1px solid"><img
+                                src="{{ asset('')~contenir.idProduit.image }}" width="100" height="100"></td>
+                    <td class="align-middle" style="border: 1px solid">{{ contenir.quantite }}</td>
+                    <td class="align-middle"
+                        style="border: 1px solid">{{ contenir.idProduit.tarif * contenir.quantite }}</td>
+                    <td class="align-middle" style="border: 1px solid">
+                        <a href="{{ path('panier_delProd', {'id': contenir.getIdProduit().getId(), 'idContenir': contenir.id}) }}"
+                           class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                        <a href="{{ path('panier_add', {'id': contenir.getIdProduit().getId()}) }}"
+                           class="btn btn-info"><i class="bi bi-plus-square"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucun article enregistré</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% block javascripts %}
+
+            <script src="https://www.paypal.com/sdk/js?client-id=test"></script>
+            <script>
+                paypal.Buttons({
+                    createOrder: function (date, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: {{ panier.montanttotal }}
+                                }
+                            }]
+                        });
+                    },
+                    onApprove: function (date, actions) {
+                        return actions.order.capture().then(function (details) {
+                            alert('La transaction à bien été effectué' + details.payer.name.given_name);
+                        });
+                    }
+                }).render('#tfoot');
+            </script>
+        {% endblock %}
+        <div id="tfoot" style="height: 100px;width: 100px;">
+            <p style="width: 200px">Prix total : {{ panier.montanttotal }} €</p>
+            <a href="{{ path('accueil') }}" class="btn" style="background: #22454c; color:white; width: 200px">Ajouter un produit</a>
+            <br><br>
+        </div>
+    </div>
+{% endblock %}
